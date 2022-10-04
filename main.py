@@ -3,12 +3,11 @@ import datetime
 from pmaw import PushshiftAPI
 from PottyUtils import PottyUtils
 import time
+from RedditBot import RedditBot
 
 class PottyMouthBot:
     def __init__(self):
         self.curse_file_path = "curse_words.txt"
-        self.comment_string = "### Congratulations to the Dirtiest Mouth on Reddit (10/3/22)\n# u/DoofInTheBoot\n## They commented profanity **88** times between 10/1/2022 @ 10am and 10/2/2022 @ 10am\n| Curse Word | Number of Occurrences |\n| :----------: | :---------------------: |\n| >!Fuck!<   | 20  |\n| >!Cock!<| 2|"
-        pass
 
     def main(self):
         # Variable Setup
@@ -19,7 +18,7 @@ class PottyMouthBot:
         yesterday_upper = time_range[1]
         yesterday_lower_epoch = int(yesterday_lower.timestamp())
         yesterday_upper_epoch = int(yesterday_upper.timestamp())
-        curse_words = PottyUtils.load_profanity(self.curse_file_path)
+        curse_words = PottyUtils.load_from_path(self.curse_file_path)
         query = PottyUtils.generate_OR_query(curse_words)
 
         print("Checking for profanity usage between " + time.strftime("%m/%d/%Y - %H:%M:%S", time.localtime(yesterday_lower_epoch)) + " and " + time.strftime("%m/%d/%Y - %H:%M:%S", time.localtime(yesterday_upper_epoch)) + " on Reddit...")
@@ -48,6 +47,9 @@ class PottyMouthBot:
             print("----------------------------------")
             for curse in curse_words:
                 print(str(curse) + ":" + str(profantiy_count_by_curse[curse]))
+
+            bot = RedditBot()
+            bot.post_potty_talk(most_curses[0], yesterday_lower, yesterday_upper, most_curses[1], profantiy_count_by_curse)
         else:
             print("Error: No cursing found in timeframe")
 

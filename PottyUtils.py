@@ -5,7 +5,7 @@ class PottyUtils:
 
     # Load Profanity words from a text file into a list
     @staticmethod
-    def load_profanity(path):
+    def load_from_path(path):
         words = []
         with open(path) as f:
             while line := f.readline().rstrip():
